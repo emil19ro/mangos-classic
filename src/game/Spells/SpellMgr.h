@@ -2278,6 +2278,17 @@ class SpellMgr
         SpellMgr();
         ~SpellMgr();
 
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        static SpellEntry const* GetSpellEntry(const uint32 spell_id)
+        {
+            return sSpellTemplate.LookupEntry<SpellEntry>(spell_id);
+        }
+        /*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+
         // Accessors (const or static functions)
     public:
         // Spell affects

@@ -9676,3 +9676,25 @@ bool DoDisplayText(WorldObject* source, int32 entry, Unit const* target, uint32 
     source->MonsterText(content, type, lang, target);
     return true;
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+std::vector<std::string> ObjectMgr::GenerateNameSuffixes()
+{
+    std::vector<std::string> list1 = PetHalfName1[1860];
+    std::vector<std::string> list2 = PetHalfName1[1863];
+    std::vector<std::string> list3 = PetHalfName1[416];
+    std::vector<std::string> list4 = PetHalfName1[417];
+    list1.reserve(list1.size() + list2.size());
+    list1.insert(list1.end(), list2.begin(), list2.end());
+    list1.reserve(list1.size() + list3.size());
+    list1.insert(list1.end(), list3.begin(), list3.end());
+    list1.reserve(list1.size() + list4.size());
+    list1.insert(list1.end(), list4.begin(), list4.end());
+
+    return list1;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

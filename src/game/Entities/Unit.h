@@ -1079,6 +1079,19 @@ class Unit : public WorldObject
 
         virtual ~Unit();
 
+        /*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+        void MonsterMove(float x, float y, float z);
+        float GetMeleeReach() const;
+        bool IsTotalImmune() const;
+        bool IsTargetable(bool forAttack, bool isAttackerPlayer, bool forAoE, bool checkAlive) const;
+        void RemoveAurasWithInterruptFlags(uint32 flags, uint32 except, bool checkProcFlags, bool skipStealth);
+        bool IsCharmed() const { return !GetCharmerGuid().IsEmpty(); }
+        /*********************************************************/
+	    /***                  NYCTERMOON                       ***/
+	    /*********************************************************/
+
         void AddToWorld() override;
         void RemoveFromWorld() override;
 
@@ -2462,8 +2475,10 @@ class Unit : public WorldObject
         // Creator: permanent owner unit guid for npc pets or non-pet units [nameplate] (do not use: managed by SetOwnerGuid/GetOwnerGuid)
         ObjectGuid const& GetCreatorGuid() const { return GetGuidValue(UNIT_FIELD_CREATEDBY); }
         void SetCreatorGuid(ObjectGuid const& creator) { SetGuidValue(UNIT_FIELD_CREATEDBY, creator); }
-        // Target: current target guid as advertised on unit frames (also known as selection)
+public:
+		// Target: current target guid as advertised on unit frames (also known as selection)
         ObjectGuid const& GetTargetGuid() const { return GetGuidValue(UNIT_FIELD_TARGET); }
+protected:
         void SetTargetGuid(ObjectGuid const& targetGuid) { SetGuidValue(UNIT_FIELD_TARGET, targetGuid); }
         // Persuation target: temporarily increased reputation unit guid (pre-WotLK relations)
         ObjectGuid const& GetPersuadedGuid() const { return GetGuidValue(UNIT_FIELD_PERSUADED); }
@@ -2699,5 +2714,31 @@ class UnitLambdaEvent : public BasicEvent
 };
 
 /** @} */
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+inline Unit* Object::ToUnit()
+{
+    return IsUnit() ? static_cast<Unit*>(this) : nullptr;
+}
+
+inline Unit const* Object::ToUnit() const
+{
+    return IsUnit() ? static_cast<Unit const*>(this) : nullptr;
+}
+
+inline Unit* ToUnit(Object* object)
+{
+    return object && object->IsUnit() ? static_cast<Unit*>(object) : nullptr;
+}
+
+inline Unit const* ToUnit(Object const* object)
+{
+    return object && object->IsUnit() ? static_cast<Unit const*>(object) : nullptr;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
 
 #endif

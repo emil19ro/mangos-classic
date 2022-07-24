@@ -21,6 +21,121 @@
 
 #include "Platform/Define.h"
 
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+
+enum CompanionTiers
+{
+    T0D = 0,
+    T1D = 11,
+    T2D = 12,
+    T3D = 13,
+    T4D = 14,
+    T5D = 15,
+    T1R = 21,
+    T2R = 22,
+    T3R = 23,
+    T4R = 24,
+    T5R = 25,
+};
+
+enum CombatBotRoles
+{
+    ROLE_INVALID,
+    ROLE_MELEE_DPS,
+    ROLE_RANGE_DPS,
+    ROLE_TANK,
+    ROLE_HEALER,
+};
+
+enum Targeting
+{
+    TARGETING_NONE = 0,
+    TARGETING_FOCUSED = 1,
+    TARGETING_INDEPENDENT = 2,
+};
+
+enum CompanionEmotes
+{
+    COMPANIONS_EMOTE_NULL = 0,
+
+    COMPANIONS_EMOTE_LAUGH = 1,
+    COMPANIONS_EMOTE_CRY = 2,
+    COMPANIONS_EMOTE_KISS = 3,
+    COMPANIONS_EMOTE_CHICKEN = 4,
+    COMPANIONS_EMOTE_CLAP = 5,
+
+    COMPANIONS_EMOTE_WHISTLE = 14,
+    COMPANIONS_EMOTE_GOODBYE = 19,
+    COMPANIONS_EMOTE_CHEER = 21,
+    COMPANIONS_EMOTE_CONGRATULATIONS = 26,
+    COMPANIONS_EMOTE_HELLO = 55,
+    COMPANIONS_EMOTE_NO = 66,
+    COMPANIONS_EMOTE_YES = 67,
+    COMPANIONS_EMOTE_SIGH = 85,
+    COMPANIONS_EMOTE_THANK_YOU = 97,
+    COMPANIONS_EMOTE_YOURE_WELCOME = 102,
+    COMPANIONS_EMOTE_SEXY_WHISTLE = 104,
+    COMPANIONS_EMOTE_YAWN = 106,
+    COMPANIONS_EMOTE_RASP = 183,
+    COMPANIONS_EMOTE_TAUREN_MOO = 226,
+    COMPANIONS_EMOTE_TRAIN_CHOO_CHOO = 264,
+    COMPANIONS_EMOTE_HELP_ME = 303,
+    COMPANIONS_EMOTE_INCOMING = 304,
+    COMPANIONS_EMOTE_CHARGE = 305,
+    COMPANIONS_EMOTE_FLEE = 306,
+    COMPANIONS_EMOTE_ATTACK = 307,
+    COMPANIONS_EMOTE_OUT_OF_MANA = 323,
+    COMPANIONS_EMOTE_FOLLOW_ME = 324,
+    COMPANIONS_EMOTE_STAY_HERE = 325,
+    COMPANIONS_EMOTE_HEAL_ME = 326,
+    COMPANIONS_EMOTE_OPEN_FIRE = 327,
+    COMPANIONS_EMOTE_FLIRT = 328,
+    COMPANIONS_EMOTE_SILLY = 329,
+};
+
+enum InstanceType
+{
+    INSTANCE_TYPE_NONE = 0,
+    INSTANCE_TYPE_END_DUNGEON = 1,
+    INSTANCE_TYPE_RAID = 2,
+};
+
+enum RaidTargetIcon : uint8
+{
+    RAID_TARGET_ICON_STAR = 0,
+    RAID_TARGET_ICON_CIRCLE = 1,
+    RAID_TARGET_ICON_DIAMOND = 2,
+    RAID_TARGET_ICON_TRIANGLE = 3,
+    RAID_TARGET_ICON_MOON = 4,
+    RAID_TARGET_ICON_SQUARE = 5,
+    RAID_TARGET_ICON_CROSS = 6,
+    RAID_TARGET_ICON_SKULL = 7
+};
+
+#define COLOR_WHITE      "FFFFFF"
+#define COLOR_GOLD       "FFD700"
+#define COLOR_SILVER     "D3D3D3"
+#define COLOR_COPPER     "B87333"
+#define COLOR_ORANGE     "FFA500"
+#define COLOR_RED        "DC143C"
+#define COLOR_BLUE		 "81D4FA"
+#define COLOR_GREEN		 "00FF00"
+#define COLOR_STAR		 "FFF468"
+#define COLOR_SKULL		 "FFFFFF"
+#define COLOR_CIRCLE	 "FF7C0A"
+#define COLOR_CROSS		 "D22B2B"
+#define COLOR_SQUARE	 "0070DD"
+#define COLOR_TRIANGLE	 "00FF98"
+#define COLOR_DIAMOND	 "A330C9"
+#define COLOR_MOON		 "ADD8E6"
+#define DO_COLOR(a, b)   "|cff" a "" b "|r"
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+
 enum Gender
 {
     GENDER_MALE                        = 0,

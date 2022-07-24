@@ -4,7 +4,7 @@
 
 bool PlayerBotAI::OnSessionLoaded(const PlayerBotEntry* entry, WorldSession* sess)
 {
-	sess->LoginPlayerBot(static_cast<ObjectGuid>(entry->GetGUID())); // TODO CHECK IF WORKS
+	//sess->LoginPlayerBot(static_cast<ObjectGuid>(entry->GetGUID())); // TODO CHECK IF WORKS
 	return true;
 }
 
@@ -12,7 +12,7 @@ void PlayerBotAI::GenerateCompanionName(std::string& Name, const ObjectGuid Lead
 {
 	Player* OriginalLeader = ObjectAccessor::FindPlayerNotInWorld(LeaderGUID);
 	if (!OriginalLeader) return;
-	Group* pGroup = OriginalLeader->GetGroup();
+	const Group* pGroup = OriginalLeader->GetGroup();
 
 	// If in raid group try to generate names based on leader's Name
 	if (pGroup && pGroup->IsRaidGroup())
@@ -36,7 +36,7 @@ void PlayerBotAI::GenerateCompanionName(std::string& Name, const ObjectGuid Lead
 		for (const auto& NameSecondPart : suffix_vector)
 		{
 			std::string FusedName = NameFirstPart + NameSecondPart;
-			PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(FusedName);
+			const PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(FusedName);
 			if (!pBot && !sObjectMgr.GetPlayerGuidByName(FusedName))
 			{
 				Name = FusedName;
@@ -52,7 +52,7 @@ void PlayerBotAI::GenerateCompanionName(std::string& Name, const ObjectGuid Lead
 			for (const auto& NameSecondPart : generated_suffixes)
 			{
 				std::string Fusedname = NameFirstPart + NameSecondPart;
-				PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(Fusedname);
+				const PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(Fusedname);
 				if (!pBot && !sObjectMgr.GetPlayerGuidByName(Fusedname))
 				{
 					Name = Fusedname;
@@ -70,7 +70,7 @@ void PlayerBotAI::GenerateCompanionName(std::string& Name, const ObjectGuid Lead
 		std::shuffle(NamesVector.begin(), NamesVector.end(), std::mt19937(std::random_device()()));
 		for (const auto& itr : NamesVector)
 		{
-			PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(itr);
+			const PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(itr);
 			if (!pBot && !sObjectMgr.GetPlayerGuidByName(itr))
 			{
 				Name = itr;
@@ -85,7 +85,7 @@ void PlayerBotAI::GenerateCompanionName(std::string& Name, const ObjectGuid Lead
 			{
 				auto itr = sObjectMgr.GeneratePetName(1863);
 				normalizePlayerName(itr);
-				PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(itr);
+				const PlayerBotEntry* pBot = sPlayerBotMgr.GetBotWithName(itr);
 				if (!pBot)
 					break;
 			} while (true);
@@ -272,44 +272,6 @@ bool PlayerBotAI::SpawnNewPlayer(WorldSession* sess, const uint8 _class, const u
 				facialHair = static_cast<UINT8>(urand(0, 5));
 			}
 		}
-		else if (_race == RACE_BLOODELF)
-		{
-			if (gender == GENDER_MALE)
-			{
-				face = static_cast<UINT8>(urand(0, 4));
-				hairColor = static_cast<UINT8>(urand(0, 9));
-				skin = static_cast<uint8>(urand(0, 5));
-				hairStyle = static_cast<UINT8>(urand(0, 5));
-				facialHair = static_cast<UINT8>(urand(0, 10));
-			}
-			else
-			{
-				face = static_cast<UINT8>(urand(0, 5));
-				hairColor = static_cast<UINT8>(urand(0, 9));
-				skin = static_cast<uint8>(urand(0, 5));
-				hairStyle = static_cast<UINT8>(urand(0, 4));
-				facialHair = static_cast<UINT8>(urand(0, 5));
-			}
-		}
-		else if (_race == RACE_DRAENEI)
-		{
-			if (gender == GENDER_FEMALE)
-			{
-				face = static_cast<UINT8>(urand(0, 4));
-				hairColor = static_cast<UINT8>(urand(0, 9));
-				skin = static_cast<uint8>(urand(0, 5));
-				hairStyle = static_cast<UINT8>(urand(0, 5));
-				facialHair = static_cast<UINT8>(urand(0, 10));
-			}
-			else
-			{
-				face = static_cast<UINT8>(urand(0, 5));
-				hairColor = static_cast<UINT8>(urand(0, 9));
-				skin = static_cast<uint8>(urand(0, 5));
-				hairStyle = static_cast<UINT8>(urand(0, 4));
-				facialHair = static_cast<UINT8>(urand(0, 5));
-			}
-		}
 	}
 
 	auto newChar = new Player(sess);
@@ -331,7 +293,7 @@ bool PlayerBotAI::SpawnNewPlayer(WorldSession* sess, const uint8 _class, const u
 	// Set instance
 	if (instanceId && mapId > 1) // Not a continent
 	{
-		const auto state = dynamic_cast<DungeonPersistentState*>(sMapPersistentStateMgr.AddPersistentState(sMapStore.LookupEntry(mapId), instanceId, REGULAR_DIFFICULTY, time(nullptr) + 3600, false, true));
+		const auto state = dynamic_cast<DungeonPersistentState*>(sMapPersistentStateMgr.AddPersistentState(sMapStore.LookupEntry(mapId), instanceId, time(nullptr) + 3600, false, true));
 		newChar->BindToInstance(state, true, true);
 	}
 	// Generate position
@@ -355,6 +317,7 @@ bool PlayerBotAI::SpawnNewPlayer(WorldSession* sess, const uint8 _class, const u
 	sObjectAccessor.AddObject(newChar);
 	newChar->SetCanModifyStats(true);
 	newChar->UpdateAllStats();
+	newChar->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SPAWNING);
 
 	return true;
 }

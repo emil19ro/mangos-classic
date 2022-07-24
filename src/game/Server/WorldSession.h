@@ -36,6 +36,7 @@
 #include <mutex>
 #include <memory>
 
+class PlayerBotEntry;
 struct ItemPrototype;
 struct AuctionEntry;
 struct AuctionHouseEntry;
@@ -162,6 +163,16 @@ class WorldSession
     public:
         WorldSession(uint32 id, WorldSocket* sock, AccountTypes sec, time_t mute_time, LocaleConstant locale, std::string accountName, uint32 accountFlags);
         ~WorldSession();
+
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        PlayerBotEntry* m_bot{ nullptr };
+        PlayerBotEntry* GetBot() const { return m_bot; }
+        void SetBot(PlayerBotEntry* b) { m_bot = b; }
+        /*********************************************************/
+	    /***                  NYCTERMOON                       ***/
+	    /*********************************************************/
 
         // Set this session have no attached socket but keep it alive for short period of time to permit a possible reconnection
         void SetOffline();

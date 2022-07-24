@@ -1140,146 +1140,7 @@ public:
 			SpellEntry const* pBerserking;
 			SpellEntry const* pArcaneTorrent;
 		} racial;
-	} m_spells{};
-
-	struct HealSpellCompare
-	{
-		bool operator() (SpellEntry const* const lhs, SpellEntry const* const rhs) const
-		{
-			uint32 spell1dmg = 0;
-			uint32 spell2dmg = 0;
-
-			for (uint32 i = 0; i < MAX_SPELL_EFFECTS; i++)
-			{
-				switch (lhs->Effect[i])
-				{
-					case SPELL_EFFECT_HEAL:
-					{
-						spell1dmg += lhs->EffectBasePoints[i];
-						spell1dmg += lhs->EffectDieSides[i];
-						break;
-					}
-					case SPELL_EFFECT_SCRIPT_EFFECT:
-					{
-						if (std::strcmp(lhs->SpellName[0], "Flash of Light") == 0)
-						{
-							spell1dmg += lhs->EffectBasePoints[i];
-							spell1dmg += lhs->EffectDieSides[i];
-						}
-						break;
-					}
-				}
-			}
-			for (uint32 i = 0; i < MAX_SPELL_EFFECTS; i++)
-			{
-				switch (rhs->Effect[i])
-				{
-					case SPELL_EFFECT_HEAL:
-					{
-						spell2dmg += rhs->EffectBasePoints[i];
-						spell2dmg += rhs->EffectDieSides[i];
-						break;
-					}
-					case SPELL_EFFECT_SCRIPT_EFFECT:
-					{
-						if (std::strcmp(rhs->SpellName[0], "Flash of Light") == 0)
-						{
-							spell2dmg += rhs->EffectBasePoints[i];
-							spell2dmg += rhs->EffectDieSides[i];
-						}
-						break;
-					}
-				}
-			}
-
-			return spell1dmg > spell2dmg;
-		}
-	};
-
-	struct HealAuraCompare
-	{
-		bool operator() (SpellEntry const* const lhs, SpellEntry const* const rhs) const
-		{
-			uint32 spell1dmg = 0;
-			uint32 spell2dmg = 0;
-
-			for (uint32 i = 0; i < MAX_SPELL_EFFECTS; i++)
-			{
-				switch (lhs->Effect[i])
-				{
-					case SPELL_EFFECT_APPLY_AURA:
-					case SPELL_EFFECT_PERSISTENT_AREA_AURA:
-					case SPELL_EFFECT_APPLY_AREA_AURA_PARTY:
-						if (lhs->EffectApplyAuraName[i] == SPELL_AURA_PERIODIC_HEAL)
-						{
-							spell1dmg += lhs->EffectBasePoints[i];
-							break;
-						}
-				}
-			}
-
-			for (uint32 i = 0; i < MAX_SPELL_EFFECTS; i++)
-			{
-				switch (rhs->Effect[i])
-				{
-					case SPELL_EFFECT_APPLY_AURA:
-					case SPELL_EFFECT_PERSISTENT_AREA_AURA:
-					case SPELL_EFFECT_APPLY_AREA_AURA_PARTY:
-						if (rhs->EffectApplyAuraName[i] == SPELL_AURA_PERIODIC_HEAL)
-						{
-							spell2dmg += rhs->EffectBasePoints[i];
-							break;
-						}
-				}
-			}
-
-			return spell1dmg > spell2dmg;
-		}
-	};
-
-	enum CombatBotSpells
-	{
-		SPELL_SHIELD_SLAM = 23922,
-		SPELL_HOLY_SHIELD = 20925,
-		SPELL_SANCTITY_AURA = 20218,
-		SPELL_SHADOWFORM = 15473,
-		SPELL_ELEMENTAL_MASTERY = 16166,
-		SPELL_STORMSTRIKE = 17364,
-		SPELL_MOONKIN_FORM = 24858,
-		SPELL_LEADER_OF_THE_PACK = 17007,
-
-		SPELL_SUMMON_IMP = 688,
-		SPELL_SUMMON_VOIDWALKER = 697,
-		SPELL_SUMMON_FELHUNTER = 691,
-		SPELL_SUMMON_SUCCUBUS = 712,
-		SPELL_TAME_BEAST = 13481,
-
-		SPELL_DEADLY_POISON_I = 2823,
-		SPELL_DEADLY_POISON_II = 2824,
-		SPELL_DEADLY_POISON_III = 11355,
-		SPELL_DEADLY_POISON_IV = 11356,
-		SPELL_DEADLY_POISON_V = 25351,
-
-		SPELL_INSTANT_POISON_I = 8679,
-		SPELL_INSTANT_POISON_II = 8686,
-		SPELL_INSTANT_POISON_III = 8688,
-		SPELL_INSTANT_POISON_IV = 11338,
-		SPELL_INSTANT_POISON_V = 11339,
-		SPELL_INSTANT_POISON_VI = 11340,
-
-		SPELL_CRIPPLING_POISON_I = 3408,//slow
-		SPELL_CRIPPLING_POISON_II = 11202,
-
-		SPELL_WOUND_POISON_I = 13219,//reduce healing
-		SPELL_WOUND_POISON_II = 13225,
-		SPELL_WOUND_POISON_III = 13226,
-		SPELL_WOUND_POISON_IV = 13227,
-
-		SPELL_MIND_NUMBING_POISON_I = 5761,
-		SPELL_MIND_NUMBING_POISON_II = 8693,
-		SPELL_MIND_NUMBING_POISON_III = 11399,
-	};
-
+	} m_spells{};	
 	// ~Constructor Variables
 
 	// Mount Variables
@@ -1289,17 +1150,22 @@ public:
 	uint32 mount_flying_spell_id_280 = 30174;
 	// ~Mount Variables
 
+	void OnPacketReceived(WorldPacket const& packet) override;
+	void ProcessPacket(WorldPacket const& packet) override;
+	
+	CombatBotRoles m_role = ROLE_INVALID;
+	
 	static bool IsPhysicalDamageClass(const uint8 playerClass)
 	{
 		switch (playerClass)
 		{
-		case CLASS_WARRIOR:
-		case CLASS_PALADIN:
-		case CLASS_ROGUE:
-		case CLASS_HUNTER:
-		case CLASS_SHAMAN:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_WARRIOR:
+			case CLASS_PALADIN:
+			case CLASS_ROGUE:
+			case CLASS_HUNTER:
+			case CLASS_SHAMAN:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
@@ -1307,13 +1173,13 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_HUNTER:
-		case CLASS_PRIEST:
-		case CLASS_SHAMAN:
-		case CLASS_MAGE:
-		case CLASS_WARLOCK:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_HUNTER:
+			case CLASS_PRIEST:
+			case CLASS_SHAMAN:
+			case CLASS_MAGE:
+			case CLASS_WARLOCK:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
@@ -1321,12 +1187,12 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_WARRIOR:
-		case CLASS_PALADIN:
-		case CLASS_ROGUE:
-		case CLASS_SHAMAN:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_WARRIOR:
+			case CLASS_PALADIN:
+			case CLASS_ROGUE:
+			case CLASS_SHAMAN:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
@@ -1334,11 +1200,11 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_WARRIOR:
-		case CLASS_PALADIN:
-		case CLASS_ROGUE:
-		case CLASS_SHAMAN:
-			return true;
+			case CLASS_WARRIOR:
+			case CLASS_PALADIN:
+			case CLASS_ROGUE:
+			case CLASS_SHAMAN:
+				return true;
 		}
 		return false;
 	}
@@ -1346,10 +1212,10 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_WARRIOR:
-		case CLASS_PALADIN:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_WARRIOR:
+			case CLASS_PALADIN:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
@@ -1357,11 +1223,11 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_PALADIN:
-		case CLASS_PRIEST:
-		case CLASS_SHAMAN:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_PALADIN:
+			case CLASS_PRIEST:
+			case CLASS_SHAMAN:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
@@ -1369,64 +1235,11 @@ public:
 	{
 		switch (playerClass)
 		{
-		case CLASS_ROGUE:
-		case CLASS_DRUID:
-			return true;
+			case CLASS_ROGUE:
+			case CLASS_DRUID:
+				return true;
 		}
 		return false;
 	}
-	bool InitializeCharacter(Player* pTarget, Player* pLeader, uint32 pTargetLevel, CombatBotRoles role);
-	uint8 GetAttackersInRangeCount(float range) const;
-	uint32 NumberOfGroupAttackers() const;
-	bool IsValidHostileTarget(Unit const* pTarget, bool IgnoreCCmark = false) const;
-	uint32 GetAuraDuration(Unit* pmTarget, const std::string& pmSpellName, Unit* pmCaster = nullptr);
-	static bool IsTank(Player* pTarget);
-	uint32 GetAuraID(Unit* pmTarget, const std::string& pmSpellName, Unit* pmCaster, const bool IgnorePassive);
-	uint32 GetAuraStack(Unit* pmTarget, const std::string& pmSpellName, Unit* pmCaster = nullptr);
-	bool HasAura(Unit* pTarget, Unit* pCaster, const std::string& pSpellName, bool IgnorePassive) const;
-	static uint32 FindSpellID(const std::string& pmSpellName);
-	bool CanTryToCastSpell(Unit* pTarget, SpellEntry const* pSpellEntry, bool CheckHasAura = true) const;
-	SpellCastResult DoCastSpell(Unit* pTarget, SpellEntry const* pSpellEntry, bool triggered = false);
-	SpellCastResult DoCastSpell(Unit* pTarget, const std::string& SpellName, bool triggered = false);
-	bool AreOthersOnSameTarget(const ObjectGuid guid, const bool checkMelee, const bool checkSpells, const std::string& Type="") const;
-	uint32 GetHealingDoneBySpell(SpellEntry const* pSpellEntry, Unit* pTarget);
-	static bool EquipNewItem(Player* pTarget, uint32 pItemEntry, uint8 pEquipSlot);
-	static uint32 GetTalentID(const Player* pTarget, const std::string& TalentName);
-	static uint32 SelectAmmo(const Player* pTarget);
-	static uint32 SelectQuiver(const Player* pTarget);
-	static void ClearInventory(Player* pTarget);
-	static void Enchant(Player* pTarget, Item* pItem, uint32 EnchantID);
-	static void GiveAmmo(Player* pTarget, uint32 stacks = 0);
-	static void GiveAmmoSortHelper(Player* pTarget);
-	static void GiveBags(Player* pTarget);
-	static void InitializeSets(Player* pTarget, Player* pLeader, uint8 role);
-	static void LearnSpellsAndSkills(Player* pTarget, uint32 SkillsTrainer = 0);
-	void AddAllSpellReagents(Player* pTarget);
-	void OnPacketReceived(WorldPacket const& packet) override;
-	void ProcessPacket(WorldPacket const& packet) override;
-	void AutoAssignRole();
-	void LearnTalents(Player* pTarget, CombatBotRoles Role);
-	void LoadSpec(const Player* pTarget, CombatBotRoles role);
-	void PopulateSpellData();
-	void ResetSpellData();
-	void SetMountSelection();
 
-	bool m_receivedBgInvite = false;
-	Player* m_pDebug = nullptr;
-	Player* m_pDebug_extra = nullptr;
-	bool m_initialized = false;
-	bool m_isBuffing = true;
-	CombatBotRoles m_role = ROLE_INVALID;
-	SpellEntry const* m_resurrectionSpell = nullptr;
-	std::set<RaidTargetIcon> m_marksToCC;
-	std::set<std::string> spellBlacklist;
-	std::vector<RaidTargetIcon> m_marksToFocus;
-	std::vector<SpellEntry const*> spellListTaunt;
-	std::vector<std::pair<std::string, uint8>> Talents;
-	uint8 m_formation_position = 0;
-	float m_follow_distance = -1.0f;
-	float m_follow_angle = -1.0f;
-	std::set<std::string> m_spellBlacklist;
-	std::set<SpellEntry const*, HealAuraCompare> spellListPeriodicHeal;
-	std::set<SpellEntry const*, HealSpellCompare> spellListDirectHeal;
 };

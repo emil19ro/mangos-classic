@@ -62,6 +62,34 @@ bool ChatHandler::load_command_table = true;
 
 ChatCommand* ChatHandler::getCommandTable()
 {
+    static ChatCommand NyctermoonCompanionsCommandTable[] =
+    {
+        //{ "update",		SEC_ADMINISTRATOR,    false, &ChatHandler::HandleBotUpdateInterval,          "", nullptr },
+        //{ "focusmark",  SEC_PLAYER,           false, &ChatHandler::HandlePartyBotFocusMarkCommand,   "", nullptr },
+        //{ "ccmark",     SEC_PLAYER,           false, &ChatHandler::HandlePartyBotControlMarkCommand, "", nullptr },
+        //{ "clear",      SEC_PLAYER,           false, &ChatHandler::HandlePartyBotClearMarksCommand,  "", nullptr },
+        //{ "follow",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotFollowCommand,		"", nullptr },
+        //{ "unfollow",	SEC_PLAYER,           false, &ChatHandler::HandlePartyBotUnfollowCommand,	"", nullptr },
+        //{ "toggle",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotToggleCommand,		"", nullptr },
+        //{ "unpause",    SEC_PLAYER,           false, &ChatHandler::HandlePartyBotUnpauseCommand,     "", nullptr },
+        //{ "pause",      SEC_PLAYER,           false, &ChatHandler::HandlePartyBotPauseCommand,       "", nullptr },
+        //{ "stop",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotAttackStopCommand,  "", nullptr },
+        //{ "start",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotAttackStartCommand, "", nullptr },
+        //{ "use",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotUseGObjectCommand,  "", nullptr },
+        //{ "aoe",        SEC_PLAYER,           false, &ChatHandler::HandlePartyBotAoECommand,         "", nullptr },
+        //{ "pull",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotTankPullCommand,    "", nullptr },
+        //{ "move",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotMoveCommand,		"", nullptr },
+        //{ "stay",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotStayCommand,		"", nullptr },
+        //{ "come",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotComeToMeCommand,    "", nullptr },
+        //{ "comestay",   SEC_PLAYER,           false, &ChatHandler::HandlePartyBotComeAndStayCommand, "", nullptr },
+        //{ "cometoggle",	SEC_PLAYER,           false, &ChatHandler::HandlePartyBotComeToggleCommand,	"", nullptr },
+        //{ "set",		SEC_PLAYER,           false, &ChatHandler::HandlePartyBotSetRoleCommand,     "", nullptr },
+        //{ "clone",      SEC_PLAYER,           false, &ChatHandler::HandlePartyBotCloneCommand,       "", nullptr },
+        //{ "remove",     SEC_PLAYER,           false, &ChatHandler::HandlePartyBotRemoveCommand,      "", nullptr },
+        { "add",        SEC_PLAYER,           false, &ChatHandler::HandlePartyBotAddCommand,         "", nullptr },
+        { nullptr,      0,                    false, nullptr,                                        "", nullptr },
+    };
+
     static ChatCommand accountSetCommandTable[] =
     {
         { "addon",          SEC_ADMINISTRATOR,  true,  &ChatHandler::HandleAccountSetAddonCommand,     "", nullptr },
@@ -884,9 +912,10 @@ ChatCommand* ChatHandler::getCommandTable()
 
     static ChatCommand commandTable[] =
     {
+        { "z",              SEC_PLAYER,			false, nullptr,                       "Manage Companions", NyctermoonCompanionsCommandTable },
         { "anticheat",      SEC_GAMEMASTER,     true,  nullptr,                                           "", anticheatCommandTable},
-        { "account",        SEC_PLAYER,         true,  nullptr,                                           "", accountCommandTable  },
         { "auction",        SEC_ADMINISTRATOR,  false, nullptr,                                           "", auctionCommandTable  },
+        { "account",        SEC_PLAYER,         true,  nullptr,                                           "", accountCommandTable  },
 #ifdef BUILD_AHBOT
         { "ahbot",          SEC_ADMINISTRATOR,  true,  nullptr,                                           "", ahbotCommandTable    },
 #endif

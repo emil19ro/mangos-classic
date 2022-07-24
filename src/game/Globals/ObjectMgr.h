@@ -457,6 +457,14 @@ class ObjectMgr
         ObjectMgr();
         ~ObjectMgr();
 
+        /*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+        std::vector<std::string> GenerateNameSuffixes();
+		/*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+
         typedef std::unordered_map<uint32, Item*> ItemMap;
 
         typedef std::unordered_map<uint32, Group*> GroupMap;

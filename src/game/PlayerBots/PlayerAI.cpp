@@ -1,3 +1,3 @@
 #include "PlayerAI.h"
 
-void PlayerAI::UpdateAI(uint32 const /*diff*/) {}
+void PlayerAI_NYCTERMOON::UpdateAI(uint32 const /*diff*/) {}

@@ -3,10 +3,10 @@
 
 class PlayerBotEntry;
 
-class PlayerBotAI : public PlayerAI
+class PlayerBotAI : public PlayerAI_NYCTERMOON
 {
 public:
-	explicit PlayerBotAI(Player* pPlayer = nullptr) : PlayerAI(pPlayer), botEntry(nullptr) {}
+	explicit PlayerBotAI(Player* pPlayer = nullptr) : PlayerAI_NYCTERMOON(pPlayer), botEntry(nullptr) {}
 
 	virtual bool OnSessionLoaded(const PlayerBotEntry* entry, WorldSession* sess);
 	void GenerateCompanionName(std::string& Name, ObjectGuid LeaderGUID, const Races Race, const Gender Gender) const;

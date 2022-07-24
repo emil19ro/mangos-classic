@@ -832,9 +832,11 @@ struct SpellEntry
             return mask;
         }
 
+        int32 getDuration() const;
     private:
         // prevent creating custom entries (copy data from original in fact)
-        SpellEntry(SpellEntry const&);                      // DON'T must have implementation
+        SpellEntry(SpellEntry const&);
+        // DON'T must have implementation
 };
 
 struct SpellCastTimesEntry

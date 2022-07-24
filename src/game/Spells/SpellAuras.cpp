@@ -6247,3 +6247,17 @@ void Aura::OnPeriodicTickEnd()
     if (AuraScript* script = GetAuraScript())
         script->OnPeriodicTickEnd(this);
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+bool SpellAuraHolder::HasAuraType(AuraType type)
+{
+    for (auto m_aura : m_auras)
+        if (m_aura && m_spellProto->EffectApplyAuraName[m_aura->GetEffIndex()] == type)
+            return true;
+    return false;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

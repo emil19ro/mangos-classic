@@ -127,6 +127,15 @@ class Group
         Group();
         ~Group();
 
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        ObjectGuid GetTargetWithIcon(const RaidTargetIcon id) const { return m_targetIcons[id]; }
+        Unit* GetWorldBossAttacker();
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+
         // group manipulation methods
         bool   Create(ObjectGuid guid, const char* name);
         bool   LoadGroupFromDB(Field* fields);
@@ -266,7 +275,6 @@ class Group
         void UnbindInstance(uint32 mapid, bool unload = false);
         InstanceGroupBind* GetBoundInstance(uint32 mapid);
         BoundInstancesMap& GetBoundInstances() { return m_boundInstances; }
-
     protected:
         bool _addMember(ObjectGuid guid, const char* name, bool isAssistant = false);
         bool _addMember(ObjectGuid guid, const char* name, bool isAssistant, uint8 group);

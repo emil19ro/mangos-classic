@@ -311,3 +311,16 @@ template <class T> std::mutex HashMapHolder<T>::i_lock;
 
 template class HashMapHolder<Player>;
 template class HashMapHolder<Corpse>;
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+Player* ObjectAccessor::FindPlayerNotInWorld(const ObjectGuid guid)
+{
+    if (!guid)
+        return nullptr;
+    return HashMapHolder<Player>::Find(guid);
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

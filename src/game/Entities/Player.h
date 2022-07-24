@@ -44,6 +44,7 @@
 
 #include<vector>
 
+class PlayerAI_NYCTERMOON;
 struct Mail;
 class Channel;
 class DynamicObject;
@@ -879,6 +880,22 @@ class Player : public Unit
     public:
         explicit Player(WorldSession* session);
         ~Player();
+
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        uint8 IsTier = 0;
+        PlayerAI_NYCTERMOON* i_AI{ nullptr };
+        PlayerAI_NYCTERMOON* AI_NYCTERMOON() const { return i_AI; }
+        void SetAI(PlayerAI_NYCTERMOON* otherAI) { i_AI = otherAI; }
+        bool IsHiringCompanion = false; // for bot adding delay
+        bool CanAddClone = false; // for clone handling
+        ShortTimeTracker AddClone{ 10 * MINUTE * IN_MILLISECONDS }; // Clone timer tracking  
+        ObjectGuid const& GetResurrector() const { return m_resurrectGuid; }
+        void CastItemUseSpell(Item* Item, SpellCastTargets const& targets);
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
 
         void CleanupsBeforeDelete() override;
 
@@ -2585,5 +2602,31 @@ template <class T> void Player::ApplySpellMod(uint32 spellId, SpellModOp op, T& 
     if (totalflat != 0 || totalpct != 100)
         basevalue = T((basevalue + totalflat) * std::max(0, totalpct) / 100);
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+inline Player* Object::ToPlayer()
+{
+    return IsPlayer() ? dynamic_cast<Player*>(this) : nullptr;
+}
+
+inline Player const* Object::ToPlayer() const
+{
+    return IsPlayer() ? dynamic_cast<Player const*>(this) : nullptr;
+}
+
+inline Player* ToPlayer(Object* object)
+{
+    return object && object->IsPlayer() ? dynamic_cast<Player*>(object) : nullptr;
+}
+
+inline Player const* ToPlayer(Object const* object)
+{
+    return object && object->IsPlayer() ? dynamic_cast<Player const*>(object) : nullptr;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
 
 #endif

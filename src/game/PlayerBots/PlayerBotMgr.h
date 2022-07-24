@@ -57,7 +57,7 @@ public:
 	void SetAccountID(const uint32 _accountID) { accountID = _accountID; }
 	void SetState(const PlayerBotState _state) { state = _state; }
 	void SetRequestRemoval(const bool _requestRemoval) { requestRemoval = _requestRemoval; }
-	void SetMailBox(const WorldPacket _packet) { m_pendingPackets.push_back(_packet); }
+	void SetMailBox(const WorldPacket& _packet) { m_pendingPackets.push_back(_packet); }
 	void ClearMailBox() { m_pendingPackets.clear(); }
 	void SetAI(PlayerBotAI* _ai) { ai = _ai; }
 };

@@ -2972,3 +2972,51 @@ bool WorldObject::CheckAndIncreaseCastCounter()
     ++m_castCounter;
     return true;
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+bool WorldObject::IsValidAttackTarget(Unit const* pTarget, const bool CheckAlive) const
+{
+    if (!pTarget)
+        return false;
+    MANGOS_ASSERT(pTarget)
+
+    // can't attack self
+    if (this == pTarget)
+        return false;
+
+    if (GetMap() != pTarget->GetMap())
+        return false;
+
+    if (!pTarget->IsTargetable(true, pTarget->IsPlayer(), false, CheckAlive))
+        return false;
+
+    Unit const* pThisUnit = ToUnit();
+
+    // CvC case - can attack each other only when one of them is hostile
+    if ((!pThisUnit || !pThisUnit->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED)) && !pTarget->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED))
+        return GetReactionTo(pTarget) <= REP_HOSTILE || pTarget->GetReactionTo(this->ToUnit()) <= REP_HOSTILE;
+
+    // PvP, PvC, CvP case
+    // can't attack friendly targets
+    if (GetReactionTo(pTarget) > REP_NEUTRAL || pTarget->GetReactionTo(this->ToUnit()) > REP_NEUTRAL)
+        return false;
+
+    return true;
+}
+
+float WorldObject::GetCombatDistance(WorldObject const* target) const
+{
+    if (!target)
+        return 0;
+    const float radius = target->GetCombatReach() + GetCombatReach();
+    const float dx = GetPositionX() - target->GetPositionX();
+    const float dy = GetPositionY() - target->GetPositionY();
+    const float dz = GetPositionZ() - target->GetPositionZ();
+    const float dist = sqrt(dx * dx + dy * dy + dz * dz) - radius;
+    return dist > 0 ? dist : 0;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

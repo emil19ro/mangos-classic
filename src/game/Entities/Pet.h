@@ -331,4 +331,26 @@ class Pet : public Creature
             MANGOS_ASSERT(false);
         }
 };
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+inline bool Object::IsPet() const
+{
+    return IsCreature() && static_cast<Creature const*>(this)->IsPet();
+}
+
+inline Pet const* Object::ToPet() const
+{
+    return IsPet() ? static_cast<Pet const*>(this) : nullptr;
+}
+
+inline Pet* Object::ToPet()
+{
+    return IsPet() ? static_cast<Pet*>(this) : nullptr;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+
 #endif

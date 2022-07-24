@@ -76,6 +76,14 @@ class ObjectAccessor : public MaNGOS::Singleton<ObjectAccessor, MaNGOS::ClassLev
         ObjectAccessor& operator=(const ObjectAccessor&);
 
     public:
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        static Player* FindPlayerNotInWorld(ObjectGuid guid);
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+
         typedef std::unordered_map<ObjectGuid, Corpse*> Player2CorpsesMapType;
 
         // Search player at any map in world and other objects at same map with `obj`

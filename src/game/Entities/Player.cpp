@@ -20316,3 +20316,34 @@ uint32 Player::LookupHighestLearnedRank(uint32 spellId)
     } while ((higherRank = sSpellMgr.GetNextSpellInChain(ownedRank)));
     return ownedRank;
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+void Player::CastItemUseSpell(Item* Item, SpellCastTargets const& targets)
+{
+    ItemPrototype const* pProto = Item->GetProto();
+    int count = 0;
+    for (const auto& [SpellID, SpellTrigger, SpellCharges, SpellPPMRate, SpellCooldown, SpellCategory, SpellCategoryCooldown] : pProto->Spells)
+    {
+        if (!SpellID)
+            continue;
+
+        if (SpellTrigger != ITEM_SPELLTRIGGER_ON_USE)
+            continue;
+
+        SpellEntry const* pSpellEntry = sSpellMgr.GetSpellEntry(SpellID);
+        if (!pSpellEntry)
+            continue;
+
+        RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ITEM_USE, 0, false, pSpellEntry->HasAttribute(SPELL_ATTR_EX_ALLOW_WHILE_STEALTHED));
+        const auto spell = new Spell(this, pSpellEntry, count > 0);
+        spell->SetCastItem(Item);
+        Item->SetUsedInSpell(true);
+        spell->SpellStart(&targets);
+        ++count;
+    }
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

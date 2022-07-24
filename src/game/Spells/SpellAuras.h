@@ -97,6 +97,14 @@ class SpellAuraHolder
         ~SpellAuraHolder();
         Aura* m_auras[MAX_EFFECT_INDEX];
 
+        /*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+        bool HasAuraType(AuraType type);
+        /*********************************************************/
+		 /***                  NYCTERMOON                       ***/
+		 /*********************************************************/
+
         void AddAura(Aura* aura, SpellEffectIndex index);
         void RemoveAura(SpellEffectIndex index);
         void ApplyAuraModifiers(bool apply, bool real = false);

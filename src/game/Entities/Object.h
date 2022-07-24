@@ -364,6 +364,27 @@ class Object
     public:
         virtual ~Object();
 
+        /*********************************************************/
+		/***                  NYCTERMOON                       ***/
+		/*********************************************************/
+
+        bool IsWorldObject() const { return isType(TYPEMASK_WORLDOBJECT); }
+        WorldObject* ToWorldObject();
+        WorldObject const* ToWorldObject() const;
+        Player* ToPlayer();
+        Player const* ToPlayer() const;
+        Creature* ToCreature();
+        Creature const* ToCreature() const;
+        Unit* ToUnit();
+        Unit const* ToUnit() const;
+        virtual bool IsPet() const;
+        Pet* ToPet();
+        Pet const* ToPet() const;
+        
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+
         const bool& IsInWorld() const { return m_inWorld; }
         virtual void AddToWorld()
         {
@@ -877,6 +898,16 @@ class WorldObject : public Object
     public:
         virtual ~WorldObject() {}
 
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+        bool IsValidAttackTarget(Unit const* pTarget, bool CheckAlive = true) const;
+        float GetCombatDistance(WorldObject const* target) const;
+
+        /*********************************************************/
+        /***                  NYCTERMOON                       ***/
+        /*********************************************************/
+
         virtual void Update(const uint32 /*diff*/);
         virtual void Heartbeat() {}
         virtual uint32 GetHeartbeatDuration() const { return 5000; }
@@ -1180,9 +1211,10 @@ class WorldObject : public Object
         // these functions are used mostly for Relocate() and Corpse/Player specific stuff...
         // use them ONLY in LoadFromDB()/Create() funcs and nowhere else!
         // mapId/instanceId should be set in SetMap() function!
+public:
         void SetLocationMapId(uint32 _mapId) { m_mapId = _mapId; }
         void SetLocationInstanceId(uint32 _instanceId) { m_InstanceId = _instanceId; }
-
+protected:
         // cooldown system
         void UpdateCooldowns(TimePoint const& now);
         bool CheckLockout(SpellSchoolMask schoolMask, TimePoint const& now) const;
@@ -1217,5 +1249,32 @@ class WorldObject : public Object
         // Spell System compliance
         uint32 m_castCounter;                               // count casts chain of triggered spells for prevent infinity cast crashes
 };
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+inline WorldObject* Object::ToWorldObject()
+{
+    return IsWorldObject() ? dynamic_cast<WorldObject*>(this) : nullptr;
+}
+
+inline WorldObject const* Object::ToWorldObject() const
+{
+    return IsWorldObject() ? dynamic_cast<WorldObject const*>(this) : nullptr;
+}
+
+// Helper functions to cast between different Object pointers. Useful when unsure that your object* is valid at all.
+inline WorldObject* ToWorldObject(Object* object)
+{
+    return object && object->IsWorldObject() ? dynamic_cast<WorldObject*>(object) : nullptr;
+}
+
+inline WorldObject const* ToWorldObject(Object const* object)
+{
+    return object && object->IsWorldObject() ? dynamic_cast<WorldObject const*>(object) : nullptr;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
 
 #endif

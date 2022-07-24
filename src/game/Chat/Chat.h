@@ -81,6 +81,44 @@ class ChatHandler
         explicit ChatHandler(Player* player);
         virtual ~ChatHandler();
 
+        /*********************************************************/
+        /***                    NYCTERMOON                     ***/
+        /*********************************************************/
+        bool HandlePartyBotAddCommand(char* args);
+        //bool HandlePartyBotRemoveCommand(char* args);
+        //bool HandlePartyBotCloneCommand(char* args);
+        //bool HandlePartyBotSetRoleCommand(char* args);
+        //bool HandlePartyBotComeToggleCommand(char* args);
+        //bool HandlePartyBotUseGObjectCommand(char* args);
+        //bool HandlePartyBotTankPullCommand(char* args);
+        //bool HandlePartyBotPauseCommand(char* args);
+        //bool HandlePartyBotUnpauseCommand(char* args);
+        //bool HandlePartyBotAttackStartCommand(char* args);
+        //bool HandlePartyBotStayCommand(char* args);
+        //bool HandlePartyBotMoveCommand(char* args);
+        //bool HandlePartyBotAoECommand(char* args);
+        //bool HandlePartyBotAttackStopCommand(char* args);
+        //bool HandlePartyBotToggleCommand(char* args);
+        //bool HandlePartyBotFollowCommand(char* args);
+        //bool HandlePartyBotUnfollowCommand(char* args);
+        //bool HandlePartyBotControlMarkCommand(char* args);
+        //bool HandlePartyBotFocusMarkCommand(char* args);
+        //bool HandlePartyBotClearMarksCommand(char* args);
+        //bool HandlePartyBotComeAndStayCommand(char* args);
+        //bool HandlePartyBotComeToMeCommand(char* args);
+        //static uint8 GetCompanionCount(Player* pPlayer);
+        //bool HandleBotUpdateInterval(char* args);
+        //bool PartyBotAddRequirementCheck(Player* pPlayer, Player* pTarget);
+        //std::string FormatSpell(SpellEntry const* pSpellEntry)
+        //{
+        //    std::ostringstream out;
+        //    out << "|cffffffff|Hspell:" << pSpellEntry->Id << "|h[" << pSpellEntry->SpellName[LOCALE_enUS] << "]|h|r";
+        //    return out.str();
+        //}
+        /*********************************************************/
+	    /***                    NYCTERMOON                     ***/
+	    /*********************************************************/
+        
         static char* LineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = nullptr; return start; }
 
         // function with different implementation for chat/console

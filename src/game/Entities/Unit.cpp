@@ -12340,3 +12340,83 @@ void Unit::CharmCooldownInitialize(WorldPacket& data) const
     }
     data.put<uint8>(cdCountPos, cdCount);
 }
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+
+void Unit::MonsterMove(float x, float y, float z)
+{
+    MonsterMoveWithSpeed(x, y, z, -10.0f, GetSpeed(MOVE_RUN), 0u);
+}
+
+float Unit::GetMeleeReach() const
+{
+    return GetCombatReach();
+}
+
+bool Unit::IsTotalImmune() const
+{
+    AuraList const& immune = GetAurasByType(SPELL_AURA_SCHOOL_IMMUNITY);
+    uint32 immuneMask = 0;
+    for (const auto itr : immune)
+        immuneMask |= itr->GetModifier()->m_miscvalue;
+    return (immuneMask == SPELL_SCHOOL_MASK_ALL);
+}
+
+bool Unit::IsTargetable(bool forAttack, bool isAttackerPlayer, bool forAoE, bool checkAlive) const
+{
+    if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SPAWNING))
+        return false;
+
+    if (checkAlive && !IsAlive())
+        return false;
+
+    if (Player const* pPlayer = ToPlayer())
+        if (pPlayer->IsGameMaster() || pPlayer->getCinematic() != 0)
+            return false;
+
+    if (forAttack)
+    {
+        if (!forAoE && GetVisibility() == VISIBILITY_OFF)
+            return false;
+
+        if (!isAttackerPlayer && !forAoE && hasUnitState(UNIT_STAT_FEIGN_DEATH))
+            return false;
+
+        if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SPAWNING | UNIT_FLAG_TAXI_FLIGHT | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_UNTARGETABLE))
+            return false;
+
+        if (isAttackerPlayer && HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PLAYER))
+            return false;
+
+        if (!isAttackerPlayer && HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
+            return false;
+
+        if (IsTaxiFlying())
+            return false;
+    }
+
+    return IsInWorld();
+}
+
+void Unit::RemoveAurasWithInterruptFlags(uint32 flags, uint32 except, bool checkProcFlags, bool skipStealth)
+{
+    for (SpellAuraHolderMap::iterator iter = m_spellAuraHolders.begin(); iter != m_spellAuraHolders.end();)
+    {
+        if ((!checkProcFlags || !iter->second->GetSpellProto()->procFlags) &&
+            (!skipStealth || !iter->second->HasAuraType(SPELL_AURA_MOD_STEALTH)) &&
+            (iter->second->GetSpellProto()->AuraInterruptFlags & flags) &&
+            (iter->second->GetSpellProto()->Id != except))
+        {
+            RemoveSpellAuraHolder(iter->second);
+            iter = m_spellAuraHolders.begin();
+        }
+        else
+            ++iter;
+    }
+}
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/

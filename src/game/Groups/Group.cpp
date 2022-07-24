@@ -1516,3 +1516,41 @@ void Group::RewardGroupAtKill(Unit* pVictim, Player* player_tap)
         }
     }
 }
+
+
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
+Unit* Group::GetWorldBossAttacker()
+{
+    for (GroupReference* groupRef = GetFirstMember(); groupRef != nullptr; groupRef = groupRef->next())
+    {
+        if (Player* member = groupRef->getSource())
+        {
+            if (member->IsAlive())
+            {
+                for (auto eachAttacker : member->getAttackers())
+                {
+                    if (eachAttacker && eachAttacker->IsAlive() && eachAttacker->IsCreature() && eachAttacker->ToCreature()->GetCreatureInfo()->Rank == CREATURE_ELITE_WORLDBOSS)
+                        return eachAttacker;
+                }
+                if (Pet* memberPet = member->GetPet())
+                {
+                    if (memberPet->IsAlive())
+                    {
+                        for (auto eachAttacker : memberPet->getAttackers())
+                        {
+                            if (eachAttacker && eachAttacker->IsAlive() && eachAttacker->IsCreature() && eachAttacker->ToCreature()->GetCreatureInfo()->Rank == CREATURE_ELITE_WORLDBOSS)
+                                return eachAttacker;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return nullptr;
+}
+/*********************************************************/
+/***                  NYCTERMOON                       ***/
+/*********************************************************/
