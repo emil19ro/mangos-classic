@@ -81,6 +81,8 @@
 #include <cstdarg>
 #include <memory>
 
+#include "PlayerBotMgr.h"
+
 INSTANTIATE_SINGLETON_1(World);
 
 extern void LoadGameObjectModelList();
@@ -1584,6 +1586,13 @@ void World::Update(uint32 diff)
 
     // cleanup unused GridMap objects as well as VMaps
     sTerrainMgr.Update(diff);
+    /*********************************************************/
+	/***                  NYCTERMOON                       ***/
+	/*********************************************************/
+    sPlayerBotMgr.Update(diff);
+    /*********************************************************/
+	/***                  NYCTERMOON                       ***/
+	/*********************************************************/
 #ifdef BUILD_METRICS
     auto updateEndTime = std::chrono::time_point_cast<std::chrono::milliseconds>(Clock::now());
     long long total = (updateEndTime - m_currentTime).count();
